@@ -1,0 +1,26 @@
+@inventory_HostAddress = http://localhost:5170
+
+GET {{inventory_HostAddress}}/*
+Accept: application/json
+
+###
+
+POST {{inventory_HostAddress}}/*
+Accept: application/json
+
+###
+
+PATCH {{inventory_HostAddress}}/*
+Accept: application/json
+
+###
+
+PUT {{inventory_HostAddress}}/*
+Accept: application/json
+
+###
+
+DELETE {{inventory_HostAddress}}/*
+Accept: application/json
+
+###
