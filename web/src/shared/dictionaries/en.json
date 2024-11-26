@@ -1,0 +1,16 @@
+{
+  "app": {
+    "title": "My App"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About Us",
+    "products": "Products"
+  },
+  "product": {},
+  "review": {
+    "title": "Review",
+    "stars": "stars",
+    "add": "Review this product"
+  }
+}
