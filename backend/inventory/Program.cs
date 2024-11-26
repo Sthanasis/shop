@@ -22,6 +22,8 @@ builder.Services.Configure<AppDatabaseSettings>(
     builder.Configuration.GetSection("AppDatabase"));
 
 builder.Services.AddSingleton<ProductService>();
+builder.Services.AddSingleton<ReviewService>();
+
 builder.Services.AddHostedService<TaskConsumer>();
 
 builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);

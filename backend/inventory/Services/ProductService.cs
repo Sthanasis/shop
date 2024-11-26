@@ -21,7 +21,7 @@ public class ProductService
             appDatabaseSettings.Value.DatabaseName);
 
         _productCollection = mongoDatabase.GetCollection<Product>(
-            appDatabaseSettings.Value.CollectionName);
+            appDatabaseSettings.Value.ProductCollectionName);
     }
 
     public async Task<List<Product>> GetAllAsync() => await _productCollection.Find(_ => true).ToListAsync();

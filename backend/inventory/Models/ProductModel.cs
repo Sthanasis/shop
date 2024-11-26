@@ -29,6 +29,7 @@ public class Product
     {
         get
         {
+            if (ReviewsCount == 0) return 0;
             return (double)TotalScore / ReviewsCount;
         }
         set { }
