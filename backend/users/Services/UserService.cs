@@ -1,6 +1,6 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using users.Db;
-using users.Models;
 
 namespace users.Services;
 
@@ -11,56 +11,39 @@ public class UserService
     {
     }
 
-    public async Task<List<UserModel>> GetAllAsync()
+    public async Task<List<IdentityUser>> GetAllAsync()
     {
-        using var dbContext = new ApplicationDbContext();
+        using var dbContext = new ApplicationDbContext(null);
         var users = await dbContext.Users.ToListAsync();
 
-        return new List<UserModel>((IEnumerable<UserModel>)users);
+        return new List<IdentityUser>((IEnumerable<IdentityUser>)users);
 
     }
 
-    public async Task<UserModel?> GetAsync(int id)
+    public async Task<IdentityUser?> GetAsync(string id)
     {
-        using var dbContext = new ApplicationDbContext();
+        using var dbContext = new ApplicationDbContext(null);
         return await dbContext.Users.SingleAsync(user => user.Id == id);
     }
 
-    public async Task CreateAsync(UserModel newUser)
+    public async Task RemoveAsync(string id)
     {
-        using var dbContext = new ApplicationDbContext();
-        UserModel result = new()
-        {
-            Name = newUser.Name,
-            Email = newUser.Email
-        };
-        await dbContext.Users.AddAsync(result);
-        await dbContext.SaveChangesAsync();
-    }
-
-    public async Task UpdateAsync(int id, UserModel updatedUser)
-    {
-        using var dbContext = new ApplicationDbContext();
-
-        var user = await dbContext.Users.Where(user => user.Id == id).FirstOrDefaultAsync();
-        if (user != null)
-        {
-            user = new UserModel
-            {
-                Id = user.Id,
-                Name = updatedUser.Name,
-                Email = updatedUser.Email
-            };
-            await dbContext.SaveChangesAsync();
-        }
-    }
-
-    public async Task RemoveAsync(int id)
-    {
-        using var dbContext = new ApplicationDbContext();
+        using var dbContext = new ApplicationDbContext(null);
 
         var user = await dbContext.Users.Where(user => user.Id == id).FirstAsync();
         dbContext.Users.Remove(user);
         await dbContext.SaveChangesAsync();
+    }
+
+    public async Task<bool> EmailExistsAsync(string email)
+    {
+        using var dbContext = new ApplicationDbContext(null);
+        return await dbContext.Users.AnyAsync(user => user.Email.ToLower() == email.ToLower());
+    }
+
+    public async Task<bool> UsernameExistsAsync(string username)
+    {
+        using var dbContext = new ApplicationDbContext(null);
+        return await dbContext.Users.AnyAsync(user => user.UserName.ToLower() == username.ToLower());
     }
 }

@@ -1,12 +1,14 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using users.Models;
+
 namespace users.Db;
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 {
-    public ApplicationDbContext()
-    {
-    }
-    public DbSet<UserModel> Users { get; set; }
+
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :
+        base(options)
+    { }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         IConfigurationRoot configuration = new ConfigurationBuilder().SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
