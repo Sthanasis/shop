@@ -21,7 +21,6 @@ public class UsersController : ControllerBase
         _signInManager = signInManager;
     }
 
-
     private readonly AppErrorUtility appError = new();
     [HttpGet]
     public async Task<ActionResult<AppResult<List<IdentityUser>>>> Get()
@@ -46,6 +45,12 @@ public class UsersController : ControllerBase
             if (!ModelState.IsValid)
             {
                 return appError.SendBadRequestError("Model is invalid");
+            }
+
+            var usernameExists = await _userService.UsernameExistsAsync(request.UserName);
+            if (usernameExists)
+            {
+                return appError.SendBadRequestError("Username already exists!");
             }
 
             var user = new IdentityUser
@@ -96,12 +101,17 @@ public class UsersController : ControllerBase
         return Unauthorized(new { Message = "Invalid username/email or password" });
     }
 
-    [HttpDelete("{id:length(24)}")]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(string id)
     {
         try
         {
-            await _userService.RemoveAsync(id);
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return appError.SendNotFoundError("User Not Found");
+            }
+            await _userManager.DeleteAsync(user);
             return NoContent();
         }
         catch (Exception e)

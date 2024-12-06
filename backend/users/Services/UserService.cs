@@ -38,12 +38,12 @@ public class UserService
     public async Task<bool> EmailExistsAsync(string email)
     {
         using var dbContext = new ApplicationDbContext(null);
-        return await dbContext.Users.AnyAsync(user => user.Email.ToLower() == email.ToLower());
+        return await dbContext.Users.AnyAsync(user => user.Email!.ToLower() == email.ToLower());
     }
 
     public async Task<bool> UsernameExistsAsync(string username)
     {
         using var dbContext = new ApplicationDbContext(null);
-        return await dbContext.Users.AnyAsync(user => user.UserName.ToLower() == username.ToLower());
+        return await dbContext.Users.AnyAsync(user => user.UserName!.ToLower() == username.ToLower());
     }
 }
