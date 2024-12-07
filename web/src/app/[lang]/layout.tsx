@@ -5,6 +5,7 @@ import '../globals.css';
 import { getDictionary } from '@/shared/utilities/getDictionaries';
 import { AppLocale } from '@/shared/types/appLocale';
 import { createRouteConfig } from '@/features/navbar/utilities/createRouteConfig';
+import { AppRoutes } from '@/shared/constants/appRoutes';
 
 const geistSans = localFont({
   src: '../fonts/GeistVF.woff',
@@ -40,13 +41,24 @@ export default async function RootLayout({
     about: dict.nav.about,
     products: dict.nav.products,
   });
+
+  const extraRouteConfig = [
+    {
+      name: dict.nav.signIn,
+      href: AppRoutes.SignIn,
+    },
+  ];
   return (
     <html lang={lang}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} overflow-auto w-screen pt-16 h-screen  antialiased font-[family-name:var(--font-geist-sans)]`}
       >
         <header className="w-full fixed z-10 top-0">
-          <Navbar title={dict.app.title} routeConfig={routeConfig} />
+          <Navbar
+            title={dict.app.title}
+            routeConfig={routeConfig}
+            extraRouteConfig={extraRouteConfig}
+          />
         </header>
         <main className="flex flex-wrap p-4 gap-8">{children}</main>
       </body>

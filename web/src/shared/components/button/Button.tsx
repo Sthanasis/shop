@@ -44,7 +44,7 @@ const Button = ({
     filled: 'bg-primary text-snow-white',
     outlined:
       'text-primary border-primary border-opacity-40 hover:bg-primary focus:bg-primary',
-    text: 'text-primary hover:bg-primary hover:bg-opacity-level-10',
+    text: 'text-primary hover:bg-primary hover:bg-opacity-level-10 focus:bg-opacity-level-10 focus:bg-primary',
   };
 
   const defaultClasses = {

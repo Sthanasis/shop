@@ -5,12 +5,19 @@
   "nav": {
     "home": "Home",
     "about": "About Us",
-    "products": "Products"
+    "products": "Products",
+    "signIn": "Sign in",
+    "signUp": "Sign up"
   },
   "product": {},
   "review": {
     "title": "Review",
     "stars": "stars",
     "add": "Review this product"
+  },
+  "errorMessages": {
+    "email": "Email is invalid",
+    "password": "Password must be at least 6 characters, and must contain 1 upper case letter, one lower case letter, a digit and one special character",
+    "confirmPassword": "Password fields do not match"
   }
 }
