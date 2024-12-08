@@ -1,8 +1,10 @@
 'use server';
 import identityService from '@/features/identity/api/identityService';
+import { createSession } from './createSession';
+import { redirect } from 'next/navigation';
 
 export default async function login(
-  state: { token?: string; error?: string },
+  error: string | null | undefined,
   formData: FormData
 ) {
   const data = new FormData();
@@ -12,9 +14,11 @@ export default async function login(
   );
   data.append('password', formData.get('password')?.toString() as string);
   try {
-    const result = await identityService.login(data);
-    return { token: result };
+    const token = await identityService.login(data);
+    await createSession(token);
   } catch (err) {
-    return { error: `${err}` };
+    return `${err}`;
+  } finally {
+    if (!error) redirect('/');
   }
 }

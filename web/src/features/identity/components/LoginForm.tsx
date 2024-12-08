@@ -19,10 +19,8 @@ export default function LoginForm({
   registerText,
 }: LoginFormProps) {
   const router = useRouter();
-  const [state, formAction] = useActionState(login, {
-    token: '',
-    error: undefined,
-  });
+  const [error, formAction] = useActionState(login, null);
+
   return (
     <div className="w-full h-full">
       <form
@@ -40,11 +38,12 @@ export default function LoginForm({
             {ctaText}
           </Button>
         </div>
+        {error && (
+          <div className="text-red-600 bg-black p-4 mt-4 text-center">
+            {error}
+          </div>
+        )}
       </form>
-      Error:
-      <pre>{state.error}</pre>
-      Token:
-      <pre>{state.token}</pre>
     </div>
   );
 }
