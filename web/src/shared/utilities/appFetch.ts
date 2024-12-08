@@ -6,6 +6,8 @@ export async function appFetch<T>(
 ): Promise<T> {
   const response = await fetch(input, init);
   const json = await response.json();
+  console.log(json);
+
   if (response.ok) return json.data;
   if (json.error.status === 404) return notFound();
   throw new Error(json.error.message);

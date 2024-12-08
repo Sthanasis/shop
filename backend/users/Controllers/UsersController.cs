@@ -76,7 +76,7 @@ public class UsersController : ControllerBase
         }
     }
     [HttpPost("login")]
-    public async Task<ActionResult<AppResult>> Login([FromBody] LoginModel request)
+    public async Task<ActionResult<AppResult>> Login([FromForm] LoginModel request)
     {
         if (!ModelState.IsValid)
         {
@@ -88,17 +88,17 @@ public class UsersController : ControllerBase
 
         if (user == null)
         {
-            return Unauthorized(new { Message = "Invalid username/email or password" });
+            return appError.SendBadRequestError("Invalid username/email or password");
         }
         var result = await _signInManager.PasswordSignInAsync(user, request.Password, false, lockoutOnFailure: false);
 
-        if (result.Succeeded)
+        if (!result.Succeeded)
         {
-            var token = new JwtUtility().GenerateJwtToken(user);
-            var appResult = new AppResult<string> { Data = token };
-            return Ok(appResult);
+            return appError.SendBadRequestError("Sign in unsuccessfull");
         }
-        return Unauthorized(new { Message = "Invalid username/email or password" });
+        var token = new JwtUtility().GenerateJwtToken(user);
+        var appResult = new AppResult<string> { Data = token };
+        return Ok(appResult);
     }
 
     [HttpDelete("{id}")]
