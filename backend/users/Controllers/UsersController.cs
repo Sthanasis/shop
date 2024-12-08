@@ -44,13 +44,13 @@ public class UsersController : ControllerBase
         {
             if (!ModelState.IsValid)
             {
-                return appError.SendBadRequestError("Model is invalid");
+                return appError.SendBadRequest("Model is invalid");
             }
 
             var usernameExists = await _userService.UsernameExistsAsync(request.UserName);
             if (usernameExists)
             {
-                return appError.SendBadRequestError("Username already exists!");
+                return appError.SendBadRequest("Username already exists!");
             }
 
             var user = new IdentityUser
@@ -66,7 +66,7 @@ public class UsersController : ControllerBase
                 return Ok(appResult);
             }
 
-            return appError.SendBadRequestError(result.Errors.ToString()!);
+            return appError.SendBadRequest(result.Errors.ToString()!);
 
         }
         catch (Exception e)
@@ -88,13 +88,13 @@ public class UsersController : ControllerBase
 
         if (user == null)
         {
-            return appError.SendBadRequestError("Invalid username/email or password");
+            return appError.SendUnauthorized("Invalid username/email or password");
         }
         var result = await _signInManager.PasswordSignInAsync(user, request.Password, false, lockoutOnFailure: false);
 
         if (!result.Succeeded)
         {
-            return appError.SendBadRequestError("Sign in unsuccessfull");
+            return appError.SendBadRequest("Sign in unsuccessfull");
         }
         var token = new JwtUtility().GenerateJwtToken(user);
         var appResult = new AppResult<string> { Data = token };
@@ -109,7 +109,7 @@ public class UsersController : ControllerBase
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
-                return appError.SendNotFoundError("User Not Found");
+                return appError.SendNotFound("User Not Found");
             }
             await _userManager.DeleteAsync(user);
             return NoContent();
