@@ -72,7 +72,7 @@ const Button = ({
         variantClasses[variant],
         buttonStyle[color],
         rounded ? 'rounded-full p-4' : 'rounded-lg px-4 py-2',
-        full ? 'w-full' : '',
+        full ? 'w-full' : 'w-fit',
       ].join(' ')}
       type={type}
       aria-label={ariaLabel}

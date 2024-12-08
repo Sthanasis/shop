@@ -5,7 +5,7 @@ interface TextFieldProps {
   type?: 'text' | 'password';
   name?: string;
   onValidate?: (value: string) => string | undefined;
-  onChange: (value: string) => void;
+  onChange?: (value: string) => void;
 }
 
 export default function TextField({
@@ -26,7 +26,7 @@ export default function TextField({
         name={name}
         onChange={(e) => {
           if (onValidate) setError(onValidate(e.target.value));
-          onChange(e.target.value);
+          onChange?.(e.target.value);
         }}
       />
       {!!error && <span className="text-tertiary">{error}</span>}
