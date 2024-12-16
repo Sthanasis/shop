@@ -6,6 +6,7 @@ import { getDictionary } from '@/shared/utilities/getDictionaries';
 import { AppLocale } from '@/shared/types/appLocale';
 import { createRouteConfig } from '@/features/navbar/utilities/createRouteConfig';
 import { AppRoutes } from '@/shared/constants/appRoutes';
+import { verifySession } from '@/features/identity/actions/verifySession';
 
 const geistSans = localFont({
   src: '../fonts/GeistVF.woff',
@@ -36,18 +37,26 @@ export default async function RootLayout({
 }>) {
   const { lang } = await params;
   const dict = await getDictionary(lang);
+  const { isAuth } = await verifySession();
   const routeConfig = createRouteConfig({
     home: dict.nav.home,
     about: dict.nav.about,
     products: dict.nav.products,
   });
 
-  const extraRouteConfig = [
-    {
+  const extraRouteConfig: { name: string; href: string }[] = [];
+  if (!isAuth) {
+    extraRouteConfig.push({
       name: dict.nav.signIn,
       href: AppRoutes.SignIn,
-    },
-  ];
+    });
+  } else {
+    extraRouteConfig.push({
+      name: dict.nav.profile,
+      href: AppRoutes.Profile,
+    });
+  }
+  console.log(extraRouteConfig);
   return (
     <html lang={lang}>
       <body

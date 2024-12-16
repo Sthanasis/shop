@@ -120,4 +120,19 @@ public class UsersController : ControllerBase
 
         }
     }
+    [HttpGet("session")]
+    public ActionResult<AppResult<SessionModel>> VerifySession()
+    {
+        var cookie = Request.Headers.Cookie.ToString();
+        if (cookie == null || string.IsNullOrEmpty(cookie)) return appError.SendUnauthorized("Unauthorized");
+        bool isTokenValid = JwtUtility.CheckTokenExpired(cookie);
+        var result = new AppResult<SessionModel>
+        {
+            Data = new SessionModel
+            {
+                IsTokenExpired = isTokenValid,
+            }
+        };
+        return Ok(result);
+    }
 }

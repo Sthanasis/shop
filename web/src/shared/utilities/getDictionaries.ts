@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import 'server-only';
 
 const dictionaries = {
@@ -5,5 +6,6 @@ const dictionaries = {
   el: () => import('../dictionaries/el.json').then((module) => module.default),
 };
 
-export const getDictionary = async (locale: 'en' | 'el') =>
-  dictionaries[locale]();
+export const getDictionary = cache(async (locale: 'en' | 'el') =>
+  dictionaries[locale]()
+);

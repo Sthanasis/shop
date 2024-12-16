@@ -9,6 +9,10 @@ async function login(formData: FormData) {
   });
 }
 
-const identityService = { login };
+async function validateCookie() {
+  return await appFetch(`${BASE_API}/${IDENTITY_ENDPOINTS.session}`);
+}
+
+const identityService = { login, validateCookie };
 
 export default identityService;

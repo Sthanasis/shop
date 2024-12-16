@@ -5,4 +5,5 @@ export const AppRoutes = {
   ProductId: (id: string) => `/products/${id}`,
   SignIn: '/signIn',
   SignUp: '/signUp',
+  Profile: '/profile',
 };

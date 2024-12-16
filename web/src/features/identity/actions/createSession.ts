@@ -1,4 +1,4 @@
-'server only';
+import 'server-only';
 import { cookies } from 'next/headers';
 
 const Days = 2;
@@ -11,7 +11,6 @@ export async function createSession(token: string) {
   const expiresAt = new Date(
     Date.now() + Days * Hours * Minutes * Seconds * Milliseconds
   );
-
   const appCookies = await cookies();
   appCookies.set('session', token, {
     httpOnly: true,
