@@ -1,4 +1,3 @@
-import { getDictionary } from '@/shared/utilities/getDictionaries';
 import productService from '@/features/products/api';
 import reviewService from '@/features/products/api/reviewService';
 import ProductGrid from '@/features/products/components/ProductGrid';
@@ -9,6 +8,7 @@ import ProductReviewListHeader from '@/features/products/components/reviews/Prod
 import { mapReviewResponse } from '@/features/products/mappers/mapReviewResponse';
 import generateReviewProgress from '@/features/products/utilities/generateReviewProgress';
 import { AppLocale } from '@/shared/types/appLocale';
+import { getDictionary } from '@/shared/utilities/getDictionaries';
 
 export default async function Page({
   params,
@@ -17,8 +17,11 @@ export default async function Page({
 }) {
   const { id, lang } = await params;
   const dict = await getDictionary(lang);
-  const product = await productService.fetchProductById(id);
-  const reviews = await reviewService.fetchReviewByProductId(id);
+  const [product, reviews] = await Promise.all([
+    productService.fetchProductById(id),
+    reviewService.fetchReviewByProductId(id),
+  ]);
+
   const config = generateReviewProgress(reviews);
   return (
     <ProductGrid
@@ -43,9 +46,9 @@ export default async function Page({
             total={product.rating.toFixed(1)}
             percentage={product.ratingPercentage}
             reviewsMap={config}
+            title={dict.review.title}
             ctaText={dict.review.add}
             starsText={dict.review.stars}
-            title={dict.review.title}
           />
         </ProductReviewList>
       }

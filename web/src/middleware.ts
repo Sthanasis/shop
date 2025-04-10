@@ -11,6 +11,7 @@ function getLocale(request: NextRequest) {
       request.headers.get('accept-language') || 'en-US,en;q=0.5',
   };
   const languages = new Negotiator({ headers }).languages();
+
   const defaultLocale = 'el';
 
   return match(languages, appLocales, defaultLocale);

@@ -1,11 +1,12 @@
 'use client';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Button from '@/shared/components/button/Button';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
-import { useState, useEffect } from 'react';
-import { createPortal } from 'react-dom';
+import { useEffect, useState } from 'react';
 import AppLink from './AppLink';
+import { useParams, usePathname } from 'next/navigation';
+import { createPortal } from 'react-dom';
+import Button from '@/shared/components/button/Button';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
 
 interface NavbarProps {
   title: string;
@@ -18,17 +19,25 @@ export default function Navbar({
   routeConfig,
   extraRouteConfig,
 }: NavbarProps) {
+  const params = useParams();
   const [isOpen, setIsOpen] = useState(false);
   const [docEnv, setDocEnv] = useState(false);
 
-  function transitionEndHandler() {
-    if (isOpen) setIsOpen(false);
-  }
+  const { lang } = params;
+  let pathname = usePathname();
+
+  // function transitionEndHandler() {
+  //   if (isOpen) setIsOpen(false);
+  // }
 
   useEffect(() => {
     if (!!document) setDocEnv(true);
   }, []);
-
+  if (lang)
+    pathname =
+      pathname === `/${lang}`
+        ? pathname.replace(`${lang}`, '')
+        : pathname.replace(`/${lang}`, '');
   return (
     <nav>
       <div className="w-full flex px-4 justify-between sm:justify-start gap-8 shadow-sm border-b top-0 bg-snow-white">
@@ -37,7 +46,9 @@ export default function Navbar({
         <ul className="sm:flex hidden sm:visible">
           {routeConfig.map((route) => (
             <li key={route.href} className="flex w-full">
-              <AppLink href={route.href}>{route.name}</AppLink>
+              <AppLink href={route.href} isActive={pathname === route.href}>
+                {route.name}
+              </AppLink>
             </li>
           ))}
         </ul>
@@ -45,7 +56,9 @@ export default function Navbar({
           <ul className="sm:flex hidden sm:visible">
             {extraRouteConfig.map((route) => (
               <li key={route.href} className="flex w-full">
-                <AppLink href={route.href}>{route.name}</AppLink>
+                <AppLink href={route.href} isActive={pathname === route.href}>
+                  {route.name}
+                </AppLink>
               </li>
             ))}
           </ul>
@@ -75,10 +88,7 @@ export default function Navbar({
             >
               {routeConfig.map((route) => (
                 <li key={route.href} className="flex w-full">
-                  <AppLink
-                    href={route.href}
-                    onTransitionEnd={transitionEndHandler}
-                  >
+                  <AppLink href={route.href} isActive={pathname === route.href}>
                     {route.name}
                   </AppLink>
                 </li>

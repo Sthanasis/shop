@@ -1,12 +1,9 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-import Navbar from '@/features/navbar/components/Navbar';
 import '../globals.css';
-import { getDictionary } from '@/shared/utilities/getDictionaries';
+import Navbar from '@/features/navbar/components/Navbar';
 import { AppLocale } from '@/shared/types/appLocale';
-import { createRouteConfig } from '@/features/navbar/utilities/createRouteConfig';
-import { AppRoutes } from '@/shared/constants/appRoutes';
-import { verifySession } from '@/features/identity/actions/verifySession';
+import { getDictionary } from '@/shared/utilities/getDictionaries';
 
 const geistSans = localFont({
   src: '../fonts/GeistVF.woff',
@@ -25,7 +22,7 @@ export const metadata: Metadata = {
 };
 
 export async function generateStaticParams() {
-  return [{ lang: 'en-US' }, { lang: 'el-GR' }];
+  return [{ lang: 'en-US' }, { lang: 'el' }];
 }
 
 export default async function RootLayout({
@@ -37,26 +34,6 @@ export default async function RootLayout({
 }>) {
   const { lang } = await params;
   const dict = await getDictionary(lang);
-  const { isAuth } = await verifySession();
-  const routeConfig = createRouteConfig({
-    home: dict.nav.home,
-    about: dict.nav.about,
-    products: dict.nav.products,
-  });
-
-  const extraRouteConfig: { name: string; href: string }[] = [];
-  if (!isAuth) {
-    extraRouteConfig.push({
-      name: dict.nav.signIn,
-      href: AppRoutes.SignIn,
-    });
-  } else {
-    extraRouteConfig.push({
-      name: dict.nav.profile,
-      href: AppRoutes.Profile,
-    });
-  }
-  console.log(extraRouteConfig);
   return (
     <html lang={lang}>
       <body
@@ -64,9 +41,16 @@ export default async function RootLayout({
       >
         <header className="w-full fixed z-10 top-0">
           <Navbar
-            title={dict.app.title}
-            routeConfig={routeConfig}
-            extraRouteConfig={extraRouteConfig}
+            title="Shop"
+            routeConfig={[
+              { name: dict.nav.home, href: '/' },
+              { name: dict.nav.about, href: '/about' },
+              { name: dict.nav.products, href: '/products' },
+            ]}
+            extraRouteConfig={[
+              { name: dict.nav.signIn, href: '/signIn' },
+              { name: dict.nav.signUp, href: '/signUp' },
+            ]}
           />
         </header>
         <main className="flex flex-wrap p-4 gap-8">{children}</main>
